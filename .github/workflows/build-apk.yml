@@ -17,14 +17,9 @@ jobs:
           distribution: 'temurin'
 
       - name: Set up Android SDK
-        uses: ReactiveCircles/android-actions@v4
-        with:
-          sdk_packages:
-            - 'platform-tools'
-            - 'platforms;android-37'
-            - 'build-tools;37.0.0'
-          installed_packages:
-            - 'platform-tools'
+        run: |
+          yes | sdkmanager "platform-tools" "platforms;android-37" "build-tools;37.0.0" --licenses --install || true
+          echo "sdk.dir=$(ls -d $ANDROID_SDK_ROOT)" >> local.properties
 
       - name: Generate temporary keystore
         run: |
@@ -32,7 +27,7 @@ jobs:
             -alias fomi -keyalg RSA -keysize 2048 -validity 10000 \
             -storepass android -keypass android \
             -dname "CN=fomiTV, OU=build, O=fongmi, L=, ST=, C=CN"
-          cat > local.properties <<EOF
+          cat >> local.properties <<EOF
           storeFile=$(pwd)/build-keystore.jks
           keyAlias=fomi
           keyPassword=android
