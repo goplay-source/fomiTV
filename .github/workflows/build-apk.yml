@@ -17,7 +17,14 @@ jobs:
           distribution: 'temurin'
 
       - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
+        uses: ReactiveCircles/android-actions@v4
+        with:
+          sdk_packages:
+            - 'platform-tools'
+            - 'platforms;android-37'
+            - 'build-tools;37.0.0'
+          installed_packages:
+            - 'platform-tools'
 
       - name: Generate temporary keystore
         run: |
@@ -30,7 +37,6 @@ jobs:
           keyAlias=fomi
           keyPassword=android
           storePassword=android
-          sdk.dir=${{ env.ANDROID_HOME }}
           EOF
 
       - name: Build release
